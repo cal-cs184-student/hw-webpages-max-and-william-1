@@ -90,13 +90,166 @@
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		We implemented the edge flip operation by first checking if the edge was a boundary edge. If it was, we would not perform the flip. Otherwise, we would get every half-edge structure in the triangle, as well as their corresponding vertices, faces, and edges. We would then use updateNeighbors to link the correct half-edges to eachother, creating the flipped triangle edges. We would then update the half-edge pointers of the vertices, edges, and faces to point to the correct half-edges post flipping. One debugging trick that we used was to use the meshedit command to view the half-edges of flipped triangles to ensure that the pointers were correct.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="unflipped.png" width="400px"/>
+				  <figcaption>Teapot with unflipped edges</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="flipped.png" width="400px"/>
+				  <figcaption>Teapot with some flipped edges</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		We approached this part similar to the edge flip part. We first enumerated all the half-edges, vertices, edges, and faces of the original two triangles. We then created 3 new edges, a new vertex, and two new faces. We then used updateNeighbors to stitch together the half-edges with eachother and their respective vertices, edges, and faces. We also updated the half-edge pointers of each of the mesh components to point to the correct half-edges post splitting. One implementation trick that helped us a lot was drawing out the triangles, and listing out each component by variable name, which helped in the process of assigning pointers and neighbors. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="cube_unsplit.png" width="400px"/>
+				  <figcaption>Mesh Cube Unsplit</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="cube_split.png" width="400px"/>
+				  <figcaption>Mesh Cube with some Unsplit edges</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="ico_unsplit.png" width="400px"/>
+				  <figcaption>Mesh Icosahedron Unsplit</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="ico_split.png" width="400px"/>
+				  <figcaption>Mesh Icosahedron with edges flipped and split</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.
+		</b>
+		<br>
+		We first iterated through each vertex, marking the vertices as not new, and computing the centroid using \( (1-n\cdot u) \cdot original\_position + u \cdot original\_neighbor\_position\_sum \) . We then iterate through each edge, marking the edges as old and computing the position of the new vertex using \( \frac{3}{8} \cdot (A +B ) + \frac{1}{8}\cdot (C+D) \), storing it in newPosition of the edge. We then iterate through each of the original mesh edges, splitting them, and setting the new position of the newly created vertices to the newPosition of the edge that was split. We then iterate through all edges, and flipping them if the edge is new AND that the edge connects a new vertices to an old vertices. Finally, we go through each vertices, and set the position of the vertex to its newPosition. 
+		<br>
+		<b>Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
+		</b>
+		<br>
+		We observed that the meshes become much smoother after loop subdivision, with sharp corners and edges being smoothed out. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="ico_s1.png" width="400px"/>
+				  <figcaption>Icosahedron with 0 subdivision</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="ico_s2.png" width="400px"/>
+				  <figcaption>Icosahedron with 1 subdivision</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="ico_s3.png" width="400px"/>
+				  <figcaption>Icosahedron with 2 subdivisions</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="ico_s4.png" width="400px"/>
+				  <figcaption>Icosahedron with 3 subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		We can reduce this effect by splitting edges on the face we want to preserve, which decreases the smoothing effect. As you can see below, the faces that are covered with edge splits maintains its original shape, while the other faces are smoothed out.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s1.png" width="400px"/>
+				  <figcaption>Icosahedron with 0 subdivision</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s2.png" width="400px"/>
+				  <figcaption>Icosahedron with 1 subdivision</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="s3.png" width="400px"/>
+				  <figcaption>Icosahedron with 2 subdivisions</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="s4.png" width="400px"/>
+				  <figcaption>Icosahedron with 3 subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br>
+		<b>Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
+		</b>
+		<br>
+		We observe that the cube becomes slightly asymmetric after repeated subdivisions. This is because the original mesh is asymmetric, and has diagonals that cuase the cube to become skewed. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="cube_s1.png" width="400px"/>
+				  <figcaption>Cube with 0 subdivision</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="cube_s2.png" width="400px"/>
+				  <figcaption>Cube with 1 subdivision</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="cube_s3.png" width="400px"/>
+				  <figcaption>Cube with 2 subdivisions</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="cube_s4.png" width="400px"/>
+				  <figcaption>Cube with 3 subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br>
+		We can unskew the cube by preprocessing each diagonal edge and split it. This makes the mesh completely symmetric, and the cube subdivides symmetrically. 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="c_s1.png" width="400px"/>
+				  <figcaption>Symmetric Cube with 0 subdivision</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="c_s2.png" width="400px"/>
+				  <figcaption>Symmetric Cube with 1 subdivision</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="c_s3.png" width="400px"/>
+				  <figcaption>Symmetric Cube with 2 subdivisions</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="c_s4.png" width="400px"/>
+				  <figcaption>Symmetric Cube with 3 subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
