@@ -133,6 +133,7 @@
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
 		We created two helper functions that take the area and the norm of the triangle. The area is obtained using Heron’s formula, using the side lengths of the triangles. We iterate through the faces incident to the vertex and calculate the normal of the face using the two points and taking the cross product. To normalize the norm, we divide it by the norm and return it in the normal function. We multiply the results of the area and normal function and accumulate the result into a final vector and return that as the area weighted vertex normal.
+		<br>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -142,7 +143,7 @@
 				</td>
 				<td style="text-align: center;">
 				  <img src="teapot_shading.png" width="400px"/>
-				  <figcaption>Witt vertex shading</figcaption>
+				  <figcaption>With vertex shading</figcaption>
 				</td>
 			  </tr>
 			</table>
