@@ -132,8 +132,21 @@
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+		We created two helper functions that take the area and the norm of the triangle. The area is obtained using Heron’s formula, using the side lengths of the triangles. We iterate through the faces incident to the vertex and calculate the normal of the face using the two points and taking the cross product. To normalize the norm, we divide it by the norm and return it in the normal function. We multiply the results of the area and normal function and accumulate the result into a final vector and return that as the area weighted vertex normal.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="teapot_noshading.png" width="400px"/>
+				  <figcaption>Without vertex shading</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="teapot_shading.png" width="400px"/>
+				  <figcaption>Witt vertex shading</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		<h3>Part 4: Edge flip</h3>
 		We implemented the edge flip operation by first checking if the edge was a boundary edge. If it was, we would not perform the flip. Otherwise, we would get every half-edge structure in the triangle, as well as their corresponding vertices, faces, and edges. We would then use updateNeighbors to link the correct half-edges to eachother, creating the flipped triangle edges. We would then update the half-edge pointers of the vertices, edges, and faces to point to the correct half-edges post flipping. One debugging trick that we used was to use the meshedit command to view the half-edges of flipped triangles to ensure that the pointers were correct.
 		<div style="display: flex; flex-direction: column; align-items: center;">
