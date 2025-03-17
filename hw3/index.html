@@ -45,42 +45,111 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		TODO: Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<b>Walk through the ray generation and primitive intersection parts of the rendering pipeline.</b>
+		<p>To generate a ray, we first converted the given x, y coordinates from sensor to camera coordinates. We do this by finding the height and width using tan and hfov/vfov. We then scale the input x,y, and set the z to -1 to get the point in camera coordinates. We then use \(c2w\) to convert the camera coordinates into world coordinates. This is now our direction vector, which we normalize, and combine with \(pos\) to create the ray. We finally set the \(min\_t\) and \(max\_t\) of the ray to nClip and fClip.
+		</p>
+		<p>
+		To intersect the ray with the scene, we first initialize the intersection to be an empty intersection. We then call the intersect function corresponding with each primitive, which updates the intersection if the ray intersects with the primitive.
+		</p>
+		<b>Explain the triangle intersection algorithm you implemented in your own words.</b>
+		<p>
+		We used the Möller-Trumbore algorithm to intersect a ray with a triangle, as detailed in discussion. We used the ray's origin and direction vectors, as well as the points of the triangle to generate E1, E2, S, S1, S2. We then create a vector T using the dot products of (S2, E2), (S1, S), and (S2, D). We divide this vector by the dot product of (S1, E1). This vector yields t, the distance from ray origin to the intersection, as well as b1 and b2, the barycentric coordinates of the intersection. We check if t is in the bounds of min_t and max_t, and if b1, b2, and 1 - b1 - b2 are all in the range [0, 1]. If all conditions are met, we update the intersection with the new t, b1, and b2 values.
+		</p>
+		<b>Show images with normal shading for a few small .dae files</b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="p1_bench.png" width="400px"/>
+				  <figcaption>bench.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="p1_empty.png" width="400px"/>
+				  <figcaption>empty.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="p1_cube.png" width="400px"/>
+				  <figcaption>cube.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="p1_spheres.png" width="400px"/>
+				  <figcaption>spheres.</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.</b>
+		<p>
+		Our implementation of BVH construction is recursive, we created a recursive helper function. We first go through al primitives and create the bounding box that encapsulates all primitives in this recursive call. We then create the node, setting the bounding box and the primitives iterators start and end. We then check if the size of the primitives is less than max_leaf_size, and if it is, we return the node directly as a leaf node. 
+		If not, we calculate which axis to split on by finding the axis with the largest range, and finding the average of the centroids of the primitives along that axis. We then partition the primitives into two groups based on if their centroid position is larger or smaller than the average using the \(std::partition\) function. This gives us three iterators, start, mid and end. If one of the splits is empty, we simply split the primitives in half by setting mid to start + (end - start) / 2. We then recursively call the function on the two halves, setting the left and right children of the node to the return values of the recursive calls. Finally, we return the node.
+
+		The heuristic we chose is splitting the primitives into two groups based on if the primitive is above or below the average centroid position along the axis with the largest range. This heuristic allows for O(n) time comlexity for finding the split point, and is simple to create.
+		</p>
+
+		<b>Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p2_lucy.png" width="400px"/>
+				  <figcaption>lucy.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p2_maxplanck.png" width="400px"/>
+				  <figcaption>max planck.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<b>Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.</b>
+		<p>When rendering the maxplanck.dae file on our local computer, it takes 72.72 seconds. For CBlucy.dae, it took 228 seconds. With the BVH acceleration, it is much faster, taking 0.0515 seconds to render and 0.0418 seconds respectively. This is a huge improvement over the naive implementation, so clearly BVH acceleration reduces the amount of computation needed.</p>
 
 		<h2>Part 3: Direct Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Walk through both implementations of the direct lighting function.</b>
+		<p>
+		Hemisphere sampling: We loop through num_samples, and for each sample, we generate a sample using hemisphereSampler. We then take that sample and convert it to world coordinates by multiplying by o2w. We then create a ray from hit_p and the world sample, and set the min_t to EPS_F. Then, we check if the ray intersects with the bvh, and if it does, we get the emission of the intersected primitive. We also use the bsdf function to get the bsdf of the primitive, and calculate the cosine of the angle between the normal and the sample. We then multiply the emission, bsdf, and cosine, and divide by the pdf of the hemisphere sampler (which is 1/2pi). We then add this to the total color. Finally, we divide the total L_out by num_samples to get the average color. 
+		</p>
+		<p>
+		Importance sampling: We loop through each light in the scene. For each light, we check if it is a point light. If it is a point light, we sample the light using sample_L to get the direction, distance, and pdf. We then calculate the object coordinate of the sample by multiplying by w2o. We then create the ray using hit_p and the world sample, and set the min_t to EPS_F, and max_t to the distance - EPS_F. We then check if the ray intersects with the bvh, and if it doesn't we know there is no occlusion of the light. We then get the bsdf, cosine, and we add L * bsdf * cosine / pdf to the total L_out. 
+		If the light isn't a point light, we do the same as above except we sample ns_area_light times, and divide by ns_area_light before adding to L_out. 
+		Finally, we divide L_out by the number of lights to get the average color. 
+		</p>
+		
+		<b>Show some images rendered with both implementations of the direct lighting function.
+		</b>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p3_H_bunny.png" width="400px"/>
+				  <figcaption>bunny with hemisphere sampling.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p3_bunny.png" width="400px"/>
+				  <figcaption>bunny with importance sampling.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p1_cube.png" width="400px"/>
+				  <figcaption>cube.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p1_spheres.png" width="400px"/>
+				  <figcaption>spheres.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h2>Part 4: Global Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
