@@ -28,24 +28,24 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 3 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: William Li and Max Phillips</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-		
-		<figure>
-			<img src="cornell.png" alt="Cornell Boxes with Bunnies" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-max-and-william-1/">max and william webpage!</a>
+		<br>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw3-and-max-william5">max and william hw3 github!</a>
+
 
 		<!--
 		We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
 		-->
 
 		<h2>Overview</h2>
-		TODO: Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		<b>Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.</b>
+		<p>
+			In this homework, we implemented a basic path tracing engine that supports ray generation, scene intersection, bounding volume hierarchy acceleration, direct and global illumination, and adaptive sampling. We learned a lot about the rendering pipeline and thought long and hard about how to implement difficult parts of the pipeline such as the indirect lighting. We also learned a lot about how important acceleration can be in rendering, such as the BVH acceleration that allowed for much faster rendering times.
+		</p>
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
 		<b>Walk through the ray generation and primitive intersection parts of the rendering pipeline.</b>
@@ -140,36 +140,267 @@
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="p1_cube.png" width="400px"/>
-				  <figcaption>cube.</figcaption>
+				  <img src="p3_H_spheres.png" width="400px"/>
+				  <figcaption>spheres with hemisphere sampling.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="p1_spheres.png" width="400px"/>
-				  <figcaption>spheres.</figcaption>
+				  <img src="p3_spheres.png" width="400px"/>
+				  <figcaption>spheres with importance sampling.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<b>Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.
+		</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p3_spheres_1.png" width="400px"/>
+				  <figcaption>spheres with 1 light ray.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p3_spheres_4.png" width="400px"/>
+				  <figcaption>spheres with 4 light rays.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p3_spheres_16.png" width="400px"/>
+				  <figcaption>spheres with 16 light rays.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p3_spheres_64.png" width="400px"/>
+				  <figcaption>spheres with 64 light rays.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>
+			From these images, it is clear that as the number of light rays increases, the noise in the shadows decreases significantly. The 1 light ray image has a lot of noise and grit in the shadows, while the 64 light ray image has little noise and looks much smoother.
+		</p>
+
+		<b>
+			Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
+		</b>
+		<p>
+			Uniform hemisphere sampling produces much noisier images than light sampling, with only the brightest and darkest parts of the image being not noisy. This is because hemisphere sampling only has a small chance to actually hit the light source and get a bright color. Meanwhile, light sampling results in much smoother images with much less noise overall. This is because light sampling has a much higher chance of hitting the light source so it can get a bright color, and the noise is averaged out over multiple samples.
+		</p>
+
+		<h2>Part 4: Global Illumination</h2>
+		<b>Walk through your implementation of the indirect lighting function.</b>
+		<p>To implement the indirect lighting function, we use a recursive approach to simulate multiple bounces of light. We begin by getting the one-bounce radiance using the \(one\_bounce\_radiance\) function. If the ray depth is greater than 1 (there are more bounces to bounce), we use the BSDF to get a sample of the incoming direction and probability density function (pdf). We then generate a new ray with the sampled direction and recursively call \(at\_least\_one\_bounce\_radiance\). We accumulate the radiance from the bounces, taking into account the BSDF, cosine term, and pdf.</p>
+
+		<p>If we are not accumulating bounces, we simply set L_out to the light accumulated from the recursive call. If we are, we add the light, instead of setting it. (we also set the zero_bounce_radiance to 0 if we are not accumulating bounces).</p>
+		<p>
+		We also use Russian Roulette to terminate the recursion probabilistically to avoid infinite loops and reduce computation. We do this by having a "cont_prob", which is the probability that a ray will continue. We then use coin_flip to determine if the ray will continue. If it does, we divide the radiance by the cont_prob after recursing. If it doesn't, we simply return the zero vector without recursing.
+		</p>
+
+		<b>Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.)</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_direct_spheres.png" width="400px"/>
+				  <figcaption>spheres with direct lighting only.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_indirect_spheres.png" width="400px"/>
+				  <figcaption>spheres with indirect lighting only.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>The direct lighting has only one and zero bounce shown, so things like the shadows of the spheres and the ceiling are very dark as no light can reach them. By contrast, in the indirect lighting only, the light is able to bounce around more and thus is able to illuminate things like the shadows and undersides of the spheres and the ceiling. However, in the indirect lighting only, the places that were directly light very brightly such as the tops of the spheres (or the light itself) are darker, as we neglect the direct lighting. </p>
+
+
+		<b>For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.</b>
+		<p>
+			As seen below, the 2nd bounce of light contributes a lot of light to the scene that are mostly in shadows, particularly the ceiling and the bottom half of the bunny. The 3rd bounce of light is darker than the 2nd bounces, with the bounces more evenly spread across the scene (the walls look more evenly lit). These two bounces of light contribute to the quality of the rendered image by adding more light to the scenes, particularly to parts in shadow, and generally makes the image look more realistic as it is simulating the way light bounces in the real world. This is in contrast to rasterization, which does not take into account the real physical way light bounces, which makes it look less realistic.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_0_bunny.png" width="400px"/>
+				  <figcaption>bunny with 0 bounces.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_0_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 0 bounces.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_1_bunny.png" width="400px"/>
+				  <figcaption>bunny with 1 bounce.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_1_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 1 bounce.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_2_bunny.png" width="400px"/>
+				  <figcaption>bunny with 2 bounces.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_2_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 2 bounces.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_3_bunny.png" width="400px"/>
+				  <figcaption>bunny with 3 bounces.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_3_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 3 bounces.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_4_bunny.png" width="400px"/>
+				  <figcaption>bunny with 4 bounces.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_4_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 4 bounces.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_5_bunny.png" width="400px"/>
+				  <figcaption>bunny with 5 bounces.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_accum_5_bunny.png" width="400px"/>
+				  <figcaption>bunny with accumulated 5 bounces.</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 
-		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<b>Compare rendered views of accumulated and unaccumulated bounces for CBbunny.dae with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag). Use 1024 samples per pixel.</b>
+		<p>
+			(Seen in the above images) The images that accumulate light are much brighter and by the 5th accumulation, the image is very realistic and nice looking. The unaccumulated bounce images get progressively much darker, with the 5th bounce being mostly in darkness and not contributing much light to the image.
+		</p>
+
+
+		<b>For CBbunny.dae, output the Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_0_bunny.png" width="400px"/>
+				  <figcaption>bunny with 0 bounces (Russian Roulette).</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_1_bunny.png" width="400px"/>
+				  <figcaption>bunny with 1 bounce (Russian Roulette).</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_2_bunny.png" width="400px"/>
+				  <figcaption>bunny with 2 bounces (Russian Roulette).</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_3_bunny.png" width="400px"/>
+				  <figcaption>bunny with 3 bounces (Russian Roulette).</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_4_bunny.png" width="400px"/>
+				  <figcaption>bunny with 4 bounces (Russian Roulette).</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="p4_roulette_100_bunny.png" width="400px"/>
+				  <figcaption>bunny with 100 bounces (Russian Roulette).</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		
+		<b>Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+		<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<tr>
+			  <td style="text-align: center;">
+				<img src="p4_sample_1_spheres.png" width="400px"/>
+				<figcaption>spheres with 1 sample per pixel.</figcaption>
+			  </td>
+			  <td style="text-align: center;">
+				<img src="p4_sample_2_spheres.png" width="400px"/>
+				<figcaption>spheres with 2 samples per pixel.</figcaption>
+			  </td>
+			</tr>
+			<tr>
+			  <td style="text-align: center;">
+				<img src="p4_sample_4_spheres.png" width="400px"/>
+				<figcaption>spheres with 4 samples per pixel.</figcaption>
+			  </td>
+			  <td style="text-align: center;">
+				<img src="p4_sample_8_spheres.png" width="400px"/>
+				<figcaption>spheres with 8 samples per pixel.</figcaption>
+			  </td>
+			</tr>
+			<tr>
+			  <td style="text-align: center;">
+				<img src="p4_sample_64_spheres.png" width="400px"/>
+				<figcaption>spheres with 64 samples per pixel.</figcaption>
+			  </td>
+			  <td style="text-align: center;">
+				<img src="p4_sample_1024_spheres.png" width="400px"/>
+				<figcaption>spheres with 1024 samples per pixel.</figcaption>
+			  </td>
+			</tr>
+		  </table>
+		</div>
+		<p>
+			We can see that as the number of samples per pixel increases, the amount of noise in the image decreases significantly. The 1 sample per pixel image has a lot of noise and grit throughout the entire image, while the 64 sample and 1024 sample images are much smoother and have much less noise. The 1024 sample image is the smoothest and has the least noise, and is the most realistic looking.
+		</p>
 
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Explain adaptive sampling. Walk through your implementation of the adaptive sampling.</b>
+		<p>
+			Adaptive sampling is when we choose to stop sampling a given pixel once it is clear that sampling any more will not contribute greatly to the image. We do this by calculating the mean and variance of the pixel as we sample. Every \(samplesPerBatch\) samples, we check the measure \(I = 1.96 \cdot\frac{\sigma}{\sqrt{n}}\), where \(\sigma\) is the standard deviation of the pixel and n is the number of samples. If I is less than \(maxTolerance \cdot \mu\), where \(\mu\) is the mean of the pixel, we stop sampling the pixel, as this shows that the pixel has converged. We also stop sampling the pixel if the number of samples is greater than maxSamplesPerPixel.
+		</p>
+		<b>
+		Pick two scenes and render them with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth.
+		</b>
 
-		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+				  <td style="text-align: center;">
+					<img src="adaptive_bunny.png" width="400px"/>
+					<figcaption>bunny with adaptive sampling at 2048 samples per pixel.</figcaption>
+				  </td>
+				  <td style="text-align: center;">
+					<img src="adaptive_bunny_rate.png" width="400px"/>
+					<figcaption>bunny rate with adaptive sampling at 2048 samples per pixel.</figcaption>
+				  </td>
+				</tr>
+				<tr>
+				  <td style="text-align: center;">
+					<img src="adaptive_spheres.png" width="400px"/>
+					<figcaption>spheres with adaptive sampling at 2048 samples per pixel.</figcaption>
+				  </td>
+				  <td style="text-align: center;">
+					<img src="adaptive_spheres_rate.png" width="400px"/>
+					<figcaption>spheres rate with adaptive sampling at 2048 samples per pixel.</figcaption>
+				  </td>
+				</tr>
+			  </table>
+			</div>
+		<p>
+		From the images, we can see that the adaptive sampling rate gives very good quality images that are essentially noise-free and look very realistic. The adaptive sampling rate image shows that some areaes such as the light, the walls, and floor have a lower sampling rate because they don't need many samples to converge, while parts of the image like the dark parts of the spheres and bunny have a higher sampling rate because there is more variance in the pixel values and they need more samples to converge.
+		</p>
 		</div>
 	</body>
 </html>
