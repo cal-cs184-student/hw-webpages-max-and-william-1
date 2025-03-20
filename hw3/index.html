@@ -195,7 +195,22 @@
 		<p>
 		We also use Russian Roulette to terminate the recursion probabilistically to avoid infinite loops and reduce computation. We do this by having a "cont_prob", which is the probability that a ray will continue. We then use coin_flip to determine if the ray will continue. If it does, we divide the radiance by the cont_prob after recursing. If it doesn't, we simply return the zero vector without recursing.
 		</p>
-
+		<b>Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
+		</b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="spheres.png" width="400px"/>
+				  <figcaption>spheres with global illumination.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny.png" width="400px"/>
+				  <figcaption>bunny with global illumination.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		<b>Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.)</b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
