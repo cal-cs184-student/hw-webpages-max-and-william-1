@@ -99,12 +99,15 @@
 
 		<h2>Part 2: Simulation via numerical integration</h2>
 		<b>Describe the effects of changing the spring constant ks; how does the cloth behave from start to rest with a very low ks? A high ks?</b>
+		<br>
 		A higher ks implies that the spring between the point masses is stronger, which leads to the cloth not hanging as low, relative to the cloth when the ks is lower. Consequently, the cloths with higher ks bounces around less as the spring keeps the cloth moving in 1 fluid motion, while in the lower ks, other factors - primarily gravity is able to have a large effect on the motion of the cloth. 
 		<br>
 		<b>What about for density?</b>
+		<br>
 		Lower density implies that each point mass has less weight, which means that each point is not able to pull on its neighbors as much. This leads to lower density acting more “fluidly”, where most of the point travel in the same direction for the majority of the time before rest. Where as with a larger density, each point mass can move more independently, causing interesting wave shapes as the cloth settles. 
 		<br>
 		<b>What about for damping?</b>
+		<br>
 		A larger damping coefficient leads to less time taken to settle, as the amount of energy lost each step, meaning that it will settle quicker. In particular, if you set the damping to 0%, then the simulation “never”(I only ran it for 5 or so minutes) ends. Lower damping also has each individual point acting more on its own - particularly at the start - as it takes longer for the gravity to become the primary force acting on each point. 
 
 			
@@ -115,20 +118,29 @@
 		As mentioned above, the higher spring constant means that the spring is less likely to bend/move. This can be seen in the images with the varying spring constants, where the higher the spring constant the less the cloth “forms” around the ball, but rather, it retains its plane like shape more. 
 		<br>
 		<b>Show us screenshots of your shaded cloth from scene/sphere.json in its final resting state on the sphere using the default ks = 5000 as well as with ks = 500 and ks = 50000. Describe the differences in the results.</b>
-		<img src="sphere-500.png" width="400px"/>
+		<img src="sphere-500.png" width="1000px"/>
 		ks=500
-		<img src="sphere-5k.png" width="400px"/>
+		<img src="sphere5k.png" width="1000px"/>
 		ks=5000
-		<img src="sphere-50k.png" width="400px"/>
+		<img src="sphere50k.png" width="1000px"/>
 		ks=5000
 
 		<h2>Part 4: Handling self-collisions</h2>
 		<b>Describe your implementation of handling self-collisions.</b>	
 		We run the ‘self_collide’ method on each point after calculating the net force and the corresponding verlet integration for position. Each point is then placed into a new vector based on its hashcode(a function of its x, y, z coordinates), and then compared to those for collision. This reduces the complexity of the algorithm significantly from O(n^2), where we compare each point to every other point. Each time self_collide is called, we check through every other point at the same hash index(assuming the hash results in a non-nullptr), where we first check that we don’t consider collision on the same point. Then, we calculate the distance between each ‘candidate point’ and the original point, and if it is less than 2 * thickness, that means that the points are too close and should have collided. If the points are too close, then we calculate the correction vector, which is the unit vector of the vector between the two points, multiplied 2 * thickness minus the distance. For each point, we sum up all the correction vectors and keep a count. After looping through all of the candidate points, if the number of corrections is non-zero, we then add the correction vector divided by the number of corrections divided by the number of simulation steps. 
 		<b>Show us at least 3 screenshots that document how your cloth falls and folds on itself, starting with an early, initial self-collision and ending with the cloth at a more restful state (even if it is still slightly bouncy on the ground).</b>
-		<img src="self-collide-1.png" width="400px"/>
-		<img src="self-collide-2.png" width="400px"/>
-		<img src="self-collide-3.png" width="400px"/>
+		<figure>
+			<img src="self-collide-1.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<figcaption>soon after starting</figcaption>
+		</figure>
+		<figure>
+			<img src="self-collide-2.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<figcaption>some time after starting</figcaption>
+		</figure>
+		<figure>
+			<img src="self-collide-3.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<figcaption>long time after starting</figcaption>
+		</figure>
 		<br>
 		<h2>Part 5: Shaders</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
