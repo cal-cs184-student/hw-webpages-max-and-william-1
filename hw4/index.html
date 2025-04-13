@@ -122,12 +122,6 @@
 		<br>
 		<br>
 		<b>Show us screenshots of your shaded cloth from scene/sphere.json in its final resting state on the sphere using the default ks = 5000 as well as with ks = 500 and ks = 50000. Describe the differences in the results.</b>
-<!-- 		<img src="sphere-500.png" width="1000px"/>
-		ks=500
-		<img src="sphere5k.png" width="1000px"/>
-		ks=5000
-		<img src="sphere50k.png" width="1000px"/>
-		ks=5000 -->
 		<figure>
 			<img src="sphere-500.png" alt="" style="width:70%"/>
 			<figcaption>ks=500</figcaption>
@@ -141,6 +135,11 @@
 			<figcaption>ks=50000</figcaption>
 		</figure>
 
+		<b>Show us a screenshot of your shaded cloth lying peacefully at rest on the plane. If you haven’t by now, feel free to express your colorful creativity with the cloth! (You will need to complete the shaders portion first to show custom colors.)</b>
+		<figure>
+			<img src="plane-collided.png" alt="" style="width:70%"/>
+			<figcaption>cloth collided and resting on plane</figcaption>
+		</figure>
 		<h2>Part 4: Handling self-collisions</h2>
 		<b>Describe your implementation of handling self-collisions.</b>	
 		We run the ‘self_collide’ method on each point after calculating the net force and the corresponding verlet integration for position. Each point is then placed into a new vector based on its hashcode(a function of its x, y, z coordinates), and then compared to those for collision. This reduces the complexity of the algorithm significantly from O(n^2), where we compare each point to every other point. Each time self_collide is called, we check through every other point at the same hash index(assuming the hash results in a non-nullptr), where we first check that we don’t consider collision on the same point. Then, we calculate the distance between each ‘candidate point’ and the original point, and if it is less than 2 * thickness, that means that the points are too close and should have collided. If the points are too close, then we calculate the correction vector, which is the unit vector of the vector between the two points, multiplied 2 * thickness minus the distance. For each point, we sum up all the correction vectors and keep a count. After looping through all of the candidate points, if the number of corrections is non-zero, we then add the correction vector divided by the number of corrections divided by the number of simulation steps. 
