@@ -112,8 +112,14 @@
 		<br>
 		A larger damping coefficient leads to less time taken to settle, as the amount of energy lost each step, meaning that it will settle quicker. In particular, if you set the damping to 0%, then the simulation “never”(I only ran it for 5 or so minutes) ends. Lower damping also has each individual point acting more on its own - particularly at the start - as it takes longer for the gravity to become the primary force acting on each point. 
 		
-			
-		<h2>Part 3: Handling collisions with other objects</h2>
+		<br>
+		<br>
+		<b>Show us a screenshot of your shaded cloth from scene/pinned4.json in its final resting state! If you choose to use different parameters than the default ones, please list them.</b>
+		<figure>
+			<img src="pinned4-rest.png" alt="" style="width:70%"/>
+			<figcaption>resting scene/pinned.4</figcaption>
+		</figure>
+			<h2>Part 3: Handling collisions with other objects</h2>
 		<b>Describe your implementation of handling collisions with spheres and planes.</b>
 		<br>
 		For both the sphere and plane collision, we loop through each point mass and ensure that it is not colliding with the respective object. In the case of spheres, determining collision is straightforward, as it is just the distance between the point and the center of the sphere relative to the radius. If the distance between the point and center is less than the radius, then there is a collision. To ensure that the cloth does not clip through the sphere, we must at the point move the point mass’s position such that it is outside of the sphere. We do this by adding the “rest” of the vector, which points to the tangent point on the surface of the sphere and then multiplying the “rest” of the vector by (1-friction) to account for the friction between the cloth and the sphere. This correctly gives us the position of the point mass had it properly collided with the sphere. For the plane collision detection, the math is slightly more interesting, where we check to see if the ‘side’ of the point has changed since the last step. We calculate this by taking the dot product with the norm and comparing the signs between the two. If the signs are different, then we must move the point to the “tangent point” plus some offset, where the tangent point is the intersection point between the plane and the movement of the point. Finally we once again scale this vector by (1-friction) to account for the friction between the point mass and the plane. 
