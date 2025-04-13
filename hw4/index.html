@@ -102,14 +102,16 @@
 		<br>
 		A higher ks implies that the spring between the point masses is stronger, which leads to the cloth not hanging as low, relative to the cloth when the ks is lower. Consequently, the cloths with higher ks bounces around less as the spring keeps the cloth moving in 1 fluid motion, while in the lower ks, other factors - primarily gravity is able to have a large effect on the motion of the cloth. 
 		<br>
+		<br>
 		<b>What about for density?</b>
 		<br>
 		Lower density implies that each point mass has less weight, which means that each point is not able to pull on its neighbors as much. This leads to lower density acting more “fluidly”, where most of the point travel in the same direction for the majority of the time before rest. Where as with a larger density, each point mass can move more independently, causing interesting wave shapes as the cloth settles. 
 		<br>
+		<br>
 		<b>What about for damping?</b>
 		<br>
 		A larger damping coefficient leads to less time taken to settle, as the amount of energy lost each step, meaning that it will settle quicker. In particular, if you set the damping to 0%, then the simulation “never”(I only ran it for 5 or so minutes) ends. Lower damping also has each individual point acting more on its own - particularly at the start - as it takes longer for the gravity to become the primary force acting on each point. 
-
+		
 			
 		<h2>Part 3: Handling collisions with other objects</h2>
 		<b>Describe your implementation of handling collisions with spheres and planes.</b>
