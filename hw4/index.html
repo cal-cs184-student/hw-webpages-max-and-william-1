@@ -53,22 +53,22 @@
 		<h2>Part 1: Masses and springs</h2>
 		<b>Take some screenshots of scene/pinned2.json from a viewing angle where you can clearly see the cloth wireframe to show the structure of your point masses and springs.</b>
 		<figure>
-			<img src="wireframe.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="img1-1-1" alt="" style="width:70%"/>
 			<figcaption>scene/pinned2.json showing all wireframe structures</figcaption>
 		</figure>
 		<br>
 		<b>Show us what the wireframe looks like (1) without any shearing constraints, (2) with only shearing constraints, and (3) with all constraints.</b>
 		<br>
 		<figure>
-			<img src="img1-2-1.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="img1-2-1.png" alt="" style="width:70%"/>
 			<figcaption>no shearing constraints</figcaption>
 		</figure>
 		<figure>
-			<img src="img1-2-2.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="img1-2-2.png" alt="" style="width:70%"/>
 			<figcaption>only shearing constraints</figcaption>
 		</figure>
 		<figure>
-			<img src="img1-2-3.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="img1-2-3.png" alt="" style="width:70%"/>
 			<figcaption>all shearing constraints</figcaption>
 		</figure>
 <!-- 		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
@@ -130,15 +130,15 @@
 		We run the ‘self_collide’ method on each point after calculating the net force and the corresponding verlet integration for position. Each point is then placed into a new vector based on its hashcode(a function of its x, y, z coordinates), and then compared to those for collision. This reduces the complexity of the algorithm significantly from O(n^2), where we compare each point to every other point. Each time self_collide is called, we check through every other point at the same hash index(assuming the hash results in a non-nullptr), where we first check that we don’t consider collision on the same point. Then, we calculate the distance between each ‘candidate point’ and the original point, and if it is less than 2 * thickness, that means that the points are too close and should have collided. If the points are too close, then we calculate the correction vector, which is the unit vector of the vector between the two points, multiplied 2 * thickness minus the distance. For each point, we sum up all the correction vectors and keep a count. After looping through all of the candidate points, if the number of corrections is non-zero, we then add the correction vector divided by the number of corrections divided by the number of simulation steps. 
 		<b>Show us at least 3 screenshots that document how your cloth falls and folds on itself, starting with an early, initial self-collision and ending with the cloth at a more restful state (even if it is still slightly bouncy on the ground).</b>
 		<figure>
-			<img src="self-collide-1.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="self-collide-1.png" alt="" style="width:70%"/>
 			<figcaption>soon after starting</figcaption>
 		</figure>
 		<figure>
-			<img src="self-collide-2.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="self-collide-2.png" alt="" style="width:70%"/>
 			<figcaption>some time after starting</figcaption>
 		</figure>
 		<figure>
-			<img src="self-collide-3.png" alt="Cloth draped over sphere" style="width:70%"/>
+			<img src="self-collide-3.png" alt="" style="width:70%"/>
 			<figcaption>long time after starting</figcaption>
 		</figure>
 		<br>
