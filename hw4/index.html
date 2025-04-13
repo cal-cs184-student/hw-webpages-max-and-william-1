@@ -115,17 +115,30 @@
 			
 		<h2>Part 3: Handling collisions with other objects</h2>
 		<b>Describe your implementation of handling collisions with spheres and planes.</b>
+		<br>
 		For both the sphere and plane collision, we loop through each point mass and ensure that it is not colliding with the respective object. In the case of spheres, determining collision is straightforward, as it is just the distance between the point and the center of the sphere relative to the radius. If the distance between the point and center is less than the radius, then there is a collision. To ensure that the cloth does not clip through the sphere, we must at the point move the point mass’s position such that it is outside of the sphere. We do this by adding the “rest” of the vector, which points to the tangent point on the surface of the sphere and then multiplying the “rest” of the vector by (1-friction) to account for the friction between the cloth and the sphere. This correctly gives us the position of the point mass had it properly collided with the sphere. For the plane collision detection, the math is slightly more interesting, where we check to see if the ‘side’ of the point has changed since the last step. We calculate this by taking the dot product with the norm and comparing the signs between the two. If the signs are different, then we must move the point to the “tangent point” plus some offset, where the tangent point is the intersection point between the plane and the movement of the point. Finally we once again scale this vector by (1-friction) to account for the friction between the point mass and the plane. 
 
 		As mentioned above, the higher spring constant means that the spring is less likely to bend/move. This can be seen in the images with the varying spring constants, where the higher the spring constant the less the cloth “forms” around the ball, but rather, it retains its plane like shape more. 
 		<br>
 		<b>Show us screenshots of your shaded cloth from scene/sphere.json in its final resting state on the sphere using the default ks = 5000 as well as with ks = 500 and ks = 50000. Describe the differences in the results.</b>
-		<img src="sphere-500.png" width="1000px"/>
+<!-- 		<img src="sphere-500.png" width="1000px"/>
 		ks=500
 		<img src="sphere5k.png" width="1000px"/>
 		ks=5000
 		<img src="sphere50k.png" width="1000px"/>
-		ks=5000
+		ks=5000 -->
+		<figure>
+			<img src="sphere-500.png" alt="" style="width:70%"/>
+			<figcaption>ks=500</figcaption>
+		</figure>
+		<figure>
+			<img src="sphere5k.png" alt="" style="width:70%"/>
+			<figcaption>ks=5000</figcaption>
+		</figure>
+		<figure>
+			<img src="sphere50k.png" alt="" style="width:70%"/>
+			<figcaption>ks=50000</figcaption>
+		</figure>
 
 		<h2>Part 4: Handling self-collisions</h2>
 		<b>Describe your implementation of handling self-collisions.</b>	
