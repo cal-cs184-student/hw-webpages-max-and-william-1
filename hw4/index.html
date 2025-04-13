@@ -122,7 +122,7 @@
 			<img src="pinned4-rest.png" alt="" style="width:70%"/>
 			<figcaption>resting scene/pinned.4, default parameters</figcaption>
 		</figure>
-			<h2>Part 3: Handling collisions with other objects</h2>
+		<h2>Part 3: Handling collisions with other objects</h2>
 		<b>Describe your implementation of handling collisions with spheres and planes.</b>
 		<br>
 		For both the sphere and plane collision, we loop through each point mass and ensure that it is not colliding with the respective object. In the case of spheres, determining collision is straightforward, as it is just the distance between the point and the center of the sphere relative to the radius. If the distance between the point and center is less than the radius, then there is a collision. To ensure that the cloth does not clip through the sphere, we must at the point move the point mass’s position such that it is outside of the sphere. We do this by adding the “rest” of the vector, which points to the tangent point on the surface of the sphere and then multiplying the “rest” of the vector by (1-friction) to account for the friction between the cloth and the sphere. This correctly gives us the position of the point mass had it properly collided with the sphere. For the plane collision detection, the math is slightly more interesting, where we check to see if the ‘side’ of the point has changed since the last step. We calculate this by taking the dot product with the norm and comparing the signs between the two. If the signs are different, then we must move the point to the “tangent point” plus some offset, where the tangent point is the intersection point between the plane and the movement of the point. Finally we once again scale this vector by (1-friction) to account for the friction between the point mass and the plane. 
@@ -168,6 +168,11 @@
 			<img src="self-collide-3.png" alt="" style="width:70%"/>
 			<figcaption>long time after starting</figcaption>
 		</figure>
+		<br>
+		<br>
+		<b>Vary the density as well as ks and describe with words and screenshots how they affect the behavior of the cloth as it falls on itself.
+</b>
+		<br>
 		<br>
 		<h2>Part 5: Shaders</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
