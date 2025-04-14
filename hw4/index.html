@@ -202,6 +202,9 @@
 			<img src="sphere50k.png" alt="" style="width:70%"/>
 			<figcaption>ks=50000</figcaption>
 		</figure>
+		The higher ks cloth looks much more rigid, and hangs over the sphere much further. The lower ks cloth is much more fluid, and drapes down the sphere much more in softer waves.
+		<br>
+		<br>
 
 		<b>Show us a screenshot of your shaded cloth lying peacefully at rest on the plane. If you haven’t by now, feel free to express your colorful creativity with the cloth! (You will need to complete the shaders portion first to show custom colors.)</b>
 		<figure>
@@ -281,6 +284,9 @@
 		<br>
 		<b>Explain the Blinn-Phong shading model in your own words. Show a screenshot of your Blinn-Phong shader outputting only the ambient component, a screen shot only outputting the diffuse component, a screen shot only outputting the specular component, and one using the entire Blinn-Phong model.</b>
 		<br>
+		<p>
+		The Blinn-Phong shading model splits light reflection into three parts. Ambient lighting represents the general illumination in the scene, irrespective of the positino of light sources. Diffuse lighting simulates the way light is scattered on objects across all directions. Specular lighting simulates the shiny highlights on the surface, which depends on the position of the viewer and the light source. The Blinn-Phong model combines these three components to create a realistic light representation on 3D objects.
+		</p>
 		<figure>
 			<img src="ambient.png" alt="" style="width:70%"/>
 			<figcaption>only ambient component</figcaption>
@@ -311,14 +317,47 @@
 		<b>Show a screenshot of bump mapping on the cloth and on the sphere. Show a screenshot of displacement mapping on the sphere. Use the same texture for both renders. You can either provide your own texture or use one of the ones in the textures directory, BUT choose one that’s not the default texture_2.png. Compare the two approaches and resulting renders in your own words. Compare how your the two shaders react to the sphere by changing the sphere mesh’s coarseness by using -o 16 -a 16 and then -o 128 -a 128.</b>
 		<br>
 		<figure>
-			<img src="bump.png" alt="" style="width:70%"/>
+			<img src="bump_p5.png" alt="" style="width:70%"/>
 			<figcaption>bump</figcaption>
 		</figure>
 		<figure>
-			<img src="displacement.png" alt="" style="width:70%"/>
+			<img src="disp_p5.png" alt="" style="width:70%"/>
 			<figcaption>displacement</figcaption>
 		</figure>
 		<br>
+		<p>
+			The bump mapping shader creates the illusion of depth and texture on the surface of the sphere and cloth by modifying the normals based on the texture, which gives the appearance of detail without actually changing the geometry. This is in contrast to displacement mapping, where the geometry is actually offset, which is clearly visible in the sphere and cloth.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="16bump_p5.png" width="400px"/>
+				  <figcaption>16 bump mapping</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <div style="transform: rotate(-90deg); display: inline-block;">
+					<img src="16displacement_p5.png" width="400px"/>
+				  </div>
+				  <figcaption>16 displacement mapping</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="128displacement_p5.png" width="400px"/>
+				  <figcaption>128 bump mapping</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="128bump_p5.png" width="400px"/>
+				  <figcaption>128 displacement mapping</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br>
+		<p>
+			The bump map shader does not change much between the two meshes. In contrast, the displacement mapping shader has a more pronounced effect on the higher courseness mesh, with tighter detail more visible (for example the gaps between the bricks) is much more visible in the higher courseness mesh. The lower courseness is straighter and visibly has less detail in the geometry corresponding to the texture.
+		</p>
 		<br>
 		<b>Show a screenshot of your mirror shader on the cloth and on the sphere.</b>
 		<br>
