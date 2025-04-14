@@ -114,8 +114,67 @@
 		<br>
 		<br>
 		<b>For each of the above, observe any noticeable differences in the cloth compared to the default parameters and show us some screenshots of those interesting differences and describe when they occur.
-</b>
+		</b>
 		<br>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="1ks_p2.png" width="400px"/>
+				  <figcaption>default ks value (5000 ks)</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="5000ks_p2.png" width="400px"/>
+				  <figcaption>low ks value (1 ks)</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="100000ks_p2.png" width="400px"/>
+					<figcaption>high ks value (100000 ks)</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		From the above, we can see that the higher ks values lead to the cloth being more rigid and not bending as much, exemplified by the 100000ks image. 
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="1den_p2.png" width="400px"/>
+				  <figcaption>density = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="15den_p2.png" width="400px"/>
+				  <figcaption>density = 15</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="1000den_p2.png" width="400px"/>
+					<figcaption>density = 1000</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		Here, the low density (1) cloth is more fluid and settles into a roughly uniform shape, while the higher density (1000) cloth is more rigid and forms more waves.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="0damp_p2.png" width="400px"/>
+				  <figcaption>dampening = 0</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="20damp_p2.png" width="400px"/>
+				  <figcaption>dampening = 20</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="100damp_p2.png" width="400px"/>
+					<figcaption>dampening = 100</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		Here, the cloth with 0 dampening oscillates for a long time and does not settle, while the cloth with 100 dampening gracefully settles into its final form (the image above shows the cloth settling down).
+
 		<br>
 		<b>Show us a screenshot of your shaded cloth from scene/pinned4.json in its final resting state! If you choose to use different parameters than the default ones, please list them.</b>
 		<figure>
@@ -174,6 +233,44 @@
 		<br>
 		<b>Vary the density as well as ks and describe with words and screenshots how they affect the behavior of the cloth as it falls on itself.
 </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="15den_p4.png" width="400px"/>
+				  <figcaption>density = 15</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="1den_p4.png" width="400px"/>
+				  <figcaption>density = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="1000den_p4.png" width="400px"/>
+				  <figcaption>density = 1000</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		The higher density cloth forms a much more wavy and strange shape, while the lower density cloth is more fluid and flattens out much more.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="1ks_p4.png" width="400px"/>
+				  <figcaption>ks = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="15den_p4.png" width="400px"/>
+				  <figcaption>ks = 5000</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="10000ks_p4.png" width="400px"/>
+				  <figcaption>ks = 100000</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		Here, the higher ks cloth settles into a much flatter and smoother form, while the low ks cloth is much more wavy and irregular.
 		<br>
 		<br>
 		<h2>Part 5: Shaders</h2>
